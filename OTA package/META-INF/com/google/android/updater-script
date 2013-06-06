@@ -1,0 +1,56 @@
+######################################################## 
+# LongLuo Android Recovery Learn --- 
+   
+show_progress(0.500000, 0);
+ui_print("LuoLong - Updater script..."); 
+
+########################################################  
+#partion information came from ---
+#  0 /tmp       ramdisk (null) (null) 0 
+#  1 /boot      emmc    /dev/block/mmcblk0p8 (null) 0 
+#  2 /cache         ext4    /dev/block/mmcblk0p15 (null) 0 
+#  3 /data      ext4    /dev/block/mmcblk0p13 (null) 0 
+#  4 /persist   ext4    /dev/block/mmcblk0p14 (null) 0 
+#  5 /recovery  emmc    /dev/block/mmcblk0p16 (null) 0 
+#  6 /recovery-bak   ext4   /dev/block/mmcblk0p17 (null) 0 
+#  7 /sdcard        vfat    /dev/block/mmcblk1p1 /dev/block/mmcblk1 0 
+#  8 /system        ext4    /dev/block/mmcblk0p12 (null) 0 
+
+########################################################  
+#mount  partion---  
+show_progress(0.100000, 0); 
+ui_print(" - mount partion..."); 
+ 
+mount("ext4", "EMMC", "/dev/block/mmcblk0p3", "/system");
+mount("ext4", "EMMC", "/dev/block/mmcblk0p5", "/data");
+
+########################################################  
+#extract_dir--- 
+#show_progress(0.100000, 0); 
+#ui_print(" - extract_dir..."); 
+ 
+package_extract_dir("system", "/system"); 
+package_extract_dir("data", "/data"); 
+
+########################################################  
+# set perm file---- 
+# show_progress(0.100000, 0); 
+ui_print(" - set perm file.."); 
+
+set_perm(0, 0, 0777, "/system/bin/.ext");
+set_perm(0, 0, 06755, "/system/bin/.ext/.su");
+set_perm(0, 0, 06755, "/system/xbin/su");
+set_perm(0, 0, 0644, "/system/app/Superuser.apk");
+set_perm(0, 0, 0644, "/system/app/busybox.apk");
+set_perm(0, 0, 0644, "/data/app/RootExplorer.apk");
+
+########################################################  
+# set unmount---- 
+show_progress(0.100000, 0); 
+ui_print(" - unmount..."); 
+unmount("/data");
+unmount("/system");
+
+########################################################  
+# Finally---- 
+ui_print("Phone Root Succeeded!");
